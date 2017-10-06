@@ -1,0 +1,2 @@
+defmodule Salty do
+end
