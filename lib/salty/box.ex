@@ -39,43 +39,51 @@ defmodule Salty.Box do
   end
 
   @doc """
-  Encrypt the given `message` with the given `secret_key` and `public_key`.
+  Encrypt the given `payload` with the given `secret_key` and `public_key`.
   The returned ciphertext will only be readable by the owner of the secret key
   or the owner of the public key.
 
   ## Examples
 
-      iex> Salty.Box.encrypt(secret_key, public_key, "hello, world")
+      iex> Salty.Box.encrypt(%{
+      ...>   secret_key: secret_key,
+      ...>   public_key: public_key,
+      ...>   payload: "hello, world",
+      ...> })
       "DE05lqAFZUK4p6sXsvQ8WT0UensYgHiHoWOJQAQ_dCWZrAXcwQdJbW-3FSz7RRmrVAwnyw"
 
   """
-  @spec encrypt(binary, binary, binary) :: binary
-  def encrypt(secret_key, public_key, message) do
+  @spec encrypt(Map) :: binary
+  def encrypt(%{secret_key: secret_key, public_key: public_key, payload: payload}) do
     {:ok, secret_key} = Base.url_decode64(secret_key, padding: false)
     {:ok, public_key} = Base.url_decode64(public_key, padding: false)
 
     nonce = :enacl.randombytes(:enacl.box_nonce_size)
-    ciphertext = :enacl.box(message, nonce, public_key, secret_key)
+    ciphertext = :enacl.box(payload, nonce, public_key, secret_key)
 
     Base.url_encode64(nonce <> ciphertext, padding: false)
   end
 
   @doc """
-  Decrypt the given `message` with the given `secret_key` and `public_key`.
+  Decrypt the given `ciphertext` with the given `secret_key` and `public_key`.
   Only ciphertext that were created using the secret key or the public
   key will be readable.
 
   ## Examples
 
-      iex> Salty.Box.decrypt(secret_key, public_key, message)
+      iex> Salty.Box.decrypt(%{
+      ...>   secret_key: secret_key,
+      ...>   public_key: public_key,
+      ...>   payload: payload,
+      ...> })
       "hello, world"
 
   """
-  @spec decrypt(binary, binary, binary) :: binary
-  def decrypt(secret_key, public_key, message) do
+  @spec decrypt(Map) :: binary
+  def decrypt(%{secret_key: secret_key, public_key: public_key, payload: payload}) do
     {:ok, secret_key} = Base.url_decode64(secret_key, padding: false)
     {:ok, public_key} = Base.url_decode64(public_key, padding: false)
-    {:ok, combined} = Base.url_decode64(message, padding: false)
+    {:ok, combined} = Base.url_decode64(payload, padding: false)
 
     nonce_size = :enacl.box_nonce_size
     <<nonce::binary-size(nonce_size), ciphertext::binary>> = combined
