@@ -1,6 +1,6 @@
 defmodule Salty.Box do
   @moduledoc """
-  Symmetric encryption using libsodium's crypto box.
+  Asymmetric encryption using libsodium's crypto box.
   """
 
   @doc """
@@ -82,22 +82,5 @@ defmodule Salty.Box do
     {:ok, plaintext} = :enacl.box_open(ciphertext, nonce, public_key, secret_key)
 
     plaintext
-  end
-
-  @doc """
-  Decrypt the given `message` with the given `secret_key`. Only the ciphertext
-  that were created by or intended for the owner of the secret key will be
-  readable.
-
-  ## Examples
-
-      iex> Salty.Box.decrypt(secret_key, message)
-      "hello, world"
-
-  """
-  @spec decrypt(binary, binary) :: binary
-  def decrypt(secret_key, message) do
-    public_key = generate_public_key(secret_key)
-    decrypt(secret_key, public_key, message)
   end
 end
