@@ -1,0 +1,1 @@
+%{"enacl": {:git, "https://github.com/jlouis/enacl.git", "61be95caadaaceae9f8d0cad7f5149ce3f44b65f", [tag: "0.16.0"]}}
