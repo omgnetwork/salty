@@ -55,8 +55,10 @@ defmodule Salty.SecretBox do
 
     nonce_size = :enacl.secretbox_nonce_size
     <<nonce::binary-size(nonce_size), ciphertext::binary>> = combined
-    {:ok, plaintext} = :enacl.secretbox_open(ciphertext, nonce, key)
 
-    plaintext
+    case :enacl.secretbox_open(ciphertext, nonce, key) do
+      {:ok, plaintext} -> plaintext
+      {:error, _} -> raise Salty.ValidationError
+    end
   end
 end
