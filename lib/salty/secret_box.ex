@@ -1,6 +1,6 @@
 defmodule Salty.SecretBox do
   @moduledoc """
-  Symmetric encryption using libsodium's secret box.
+  Symmetric-key encryption using libsodium's secret box.
   """
 
   @doc """

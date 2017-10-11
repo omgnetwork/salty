@@ -1,6 +1,6 @@
 defmodule Salty.Box do
   @moduledoc """
-  Asymmetric encryption using libsodium's crypto box.
+  Asymmetric-key encryption using libsodium's crypto box.
   """
 
   @doc """
