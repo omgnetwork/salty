@@ -14,7 +14,7 @@ defmodule Salty.SecretBox.Cloak do
 
   def decrypt(<<tag::binary-1, ciphertext::binary>>) do
     config = Salty.Utils.get_config(:cloak, @module, tag)
-    Salty.Box.decrypt(
+    Salty.SecretBox.decrypt(
       %{
         key: config.key,
         payload: ciphertext

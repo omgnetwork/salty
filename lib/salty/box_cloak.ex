@@ -7,7 +7,7 @@ defmodule Salty.Box.Cloak do
     config.tag <> Salty.Box.encrypt(
       %{
         secret_key: config.secret_key,
-        pubic_key: config.public_key,
+        public_key: config.public_key,
         payload: plaintext
       }
     )
