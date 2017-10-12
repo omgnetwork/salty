@@ -22,7 +22,7 @@ Then run `mix deps.get` and you're done.
 
 ## Usage
 
-Salty supports both symmetric-key encryption (SecretBox) and asymetric-key encryption (Box) with optional integration with [Cloak](https://github.com/danielberkompas/cloak/) for use in Ecto applications.
+Salty supports both symmetric-key encryption (SecretBox) and asymmetric-key encryption (Box) with optional integration with [Cloak](https://github.com/danielberkompas/cloak/) for use in Ecto applications.
 
 ### Symmetric-key encryption
 
@@ -53,7 +53,7 @@ config :cloak, Salty.SecretBox.Cloak,
 
 ### Asymmetric-key encryption
 
-Asymetric-key encryption is an encryption that uses **two different keys** for each party. For Alice to send Bob a message in this scheme, the message need to be encrypted with Alice's private key and Bob's public key, and for Bob to decrypt the message, Bob will need to decrypt the message with his own private key and Alice's public key. An attacker cannot decrypt the message without first obtaining private key of either Alice or Bob.
+Asymmetric-key encryption is an encryption that uses **two different keys** for each party. For Alice to send Bob a message in this scheme, the message need to be encrypted with Alice's private key and Bob's public key, and for Bob to decrypt the message, Bob will need to decrypt the message with his own private key and Alice's public key. An attacker cannot decrypt the message without first obtaining the private key of either Alice or Bob.
 
 ```
 iex> alice_secret_key = Salty.Box.generate_secret_key
