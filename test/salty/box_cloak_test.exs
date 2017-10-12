@@ -1,7 +1,7 @@
 defmodule Salty.Box.CloakTest do
   use ExUnit.Case
 
-  # Alice and Bob are a good friends.
+  # Alice and Bob are good friends.
   @alice_secret_key "NuPf7kaOvJrdETKI5PR7qV7KFTCzjX19QYBGTaPOAu4"
   @bob_public_key "1MV78_LqSCKetEfr9aoi0sMIXdsywfJgTyUDPPYiiRM"
 

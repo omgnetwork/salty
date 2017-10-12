@@ -1,7 +1,7 @@
 defmodule Salty.SecretBoxTest do
   use ExUnit.Case
 
-  # Alice and Bob are a good friends, but everyone do have secrets.
+  # Alice and Bob are good friends, but everyone do have secrets.
   @alice_key "hUzGrIp91YZa9Hh2_jEiwmghkHfuRbPBBgtPMkN5gX0"
   @bob_key "QINgmF221y1WEg5-iyggMJNv-f370OnMwU6N3ZhgTIk"
 

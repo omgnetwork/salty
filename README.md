@@ -22,11 +22,11 @@ Then run `mix deps.get` and you're done.
 
 ## Usage
 
-Salty supports both symmetric-key encryption (SecretBox) and assymetric-key encryption (Box) with optional integration with [Cloak](https://github.com/danielberkompas/cloak/) for use in Ecto applications.
+Salty supports both symmetric-key encryption (SecretBox) and asymetric-key encryption (Box) with optional integration with [Cloak](https://github.com/danielberkompas/cloak/) for use in Ecto applications.
 
 ### Symmetric-key encryption
 
-Symmetric-key encryption is an encryption that uses the **same key** to encrypt and decrypt the data. In this scheme, in order for Alice and Bob to send each other a message, they both will have to share the same key. An adversary cannot decrypt the message without knowing the key.
+Symmetric-key encryption is an encryption that uses the **same key** to encrypt and decrypt the data. In this scheme, in order for Alice and Bob to send each other a message, they both will have to share the same key. No one else can decrypt the message without knowing the key.
 
 ```
 iex> key = Salty.SecretBox.generate_key
@@ -39,7 +39,7 @@ iex> Salty.SecretBox.decrypt(%{key: key, payload: payload})
 
 ### Using with Cloak
 
-Salty symmetric-key encryption can be used as a cipher to [Cloak](https://github.com/danielberkompas/cloak/) and supports key migration via multiple key tags the same way `Cloak.AES.CTR` does:
+Salty symmetric-key encryption can be used as a cipher for [Cloak](https://github.com/danielberkompas/cloak/) and supports key migration via multiple key tags the same way `Cloak.AES.CTR` does:
 
 ```
 config :cloak, Salty.SecretBox.Cloak,
@@ -53,7 +53,7 @@ config :cloak, Salty.SecretBox.Cloak,
 
 ### Asymmetric-key encryption
 
-Assymetric-key encryption is an encryption that uses **two different keys** for each party. For Alice to send Bob a message in this scheme, the message need to be encrypted with Alice's private key and Bob's public key, and for Bob to decrypt the message, Bob will need to decrypt the message with his own private key and Alice's public key. An adversary cannot decrypt the message obtaining private key of either Alice or Bob.
+Asymetric-key encryption is an encryption that uses **two different keys** for each party. For Alice to send Bob a message in this scheme, the message need to be encrypted with Alice's private key and Bob's public key, and for Bob to decrypt the message, Bob will need to decrypt the message with his own private key and Alice's public key. An attacker cannot decrypt the message without first obtaining private key of either Alice or Bob.
 
 ```
 iex> alice_secret_key = Salty.Box.generate_secret_key
@@ -80,7 +80,7 @@ iex> Salty.Box.decrypt(%{
 
 ### Using with Cloak
 
-Salty asymmetric-key encryption can be used as a cipher to [Cloak](https://github.com/danielberkompas/cloak/) and supports key migration via multiple key tags the same way `Cloak.AES.CTR` does:
+Salty asymmetric-key encryption can be used as a cipher for [Cloak](https://github.com/danielberkompas/cloak/) and supports key migration via multiple key tags the same way `Cloak.AES.CTR` does:
 
 ```
 config :cloak, Salty.Box.Cloak,
