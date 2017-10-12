@@ -14,10 +14,10 @@ defmodule Salty.Utils do
   end
 
   @spec decode_key(binary, integer) :: binary
-  def decode_key(secret_key, key_size) do
-    case Base.url_decode64(secret_key, padding: false) do
+  def decode_key(key, key_size) do
+    case Base.url_decode64(key, padding: false) do
       {:ok, <<secret_key::binary-size(key_size)>>} -> secret_key
-      _ -> raise Salty.KeyError
+      _ -> raise Salty.KeyError, message: "invalid key: #{key}"
     end
   end
 end

@@ -59,7 +59,7 @@ defmodule Salty.SecretBox do
           {:ok, plaintext} -> plaintext
           {:error, _} -> raise Salty.ValidationError
         end
-      _ -> raise Salty.PayloadError
+      _ -> raise Salty.PayloadError, message: "invalid payload: #{payload}"
     end
   end
 end
