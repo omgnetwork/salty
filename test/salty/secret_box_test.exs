@@ -20,7 +20,7 @@ defmodule Salty.SecretBoxTest do
 
   test "encrypt/1 and decrypt/1 errors if key is invalid base64" do
     ciphertext = Salty.SecretBox.encrypt(%{key: @alice_key, payload: "hello, world"})
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.SecretBox.decrypt(%{key: "invalid", payload: ciphertext})
     end
   end
@@ -29,6 +29,12 @@ defmodule Salty.SecretBoxTest do
     ciphertext = Salty.SecretBox.encrypt(%{key: @alice_key, payload: "hello, world"})
     assert_raise Salty.ValidationError, fn ->
       Salty.SecretBox.decrypt(%{key: @bob_key, payload: ciphertext})
+    end
+  end
+
+  test "decrypt/1 errors if payload is invalid" do
+    assert_raise Salty.PayloadError, fn ->
+      Salty.SecretBox.decrypt(%{key: @alice_key, payload: "a"})
     end
   end
 end

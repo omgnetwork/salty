@@ -29,13 +29,13 @@ defmodule Salty.BoxTest do
   end
 
   test "generate_public_key/1 errors if secret key is invalid base64" do
-    assert_raise ArgumentError, fn ->
-      Salty.Box.generate_public_key("invalid")
+    assert_raise Salty.KeyError, fn ->
+      Salty.Box.generate_public_key("p")
     end
   end
 
   test "generate_public_key/1 errors if secret key is invalid" do
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.Box.generate_public_key("dGVzdA")
     end
   end
@@ -111,7 +111,7 @@ defmodule Salty.BoxTest do
   end
 
   test "encrypt/1 errors if secret key is invalid base64" do
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.Box.encrypt(
         %{
           secret_key: "invalid",
@@ -123,7 +123,7 @@ defmodule Salty.BoxTest do
   end
 
   test "encrypt/1 errors if secret key is invalid" do
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.Box.encrypt(
         %{
           secret_key: "dGVzdA",
@@ -135,7 +135,7 @@ defmodule Salty.BoxTest do
   end
 
   test "encrypt/1 errors if public key is invalid base64" do
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.Box.encrypt(
         %{
           secret_key: @alice_secret_key,
@@ -147,7 +147,7 @@ defmodule Salty.BoxTest do
   end
 
   test "encrypt/1 errors if public key is invalid" do
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.Box.encrypt(
         %{
           secret_key: @alice_secret_key,
@@ -159,7 +159,7 @@ defmodule Salty.BoxTest do
   end
 
   test "decrypt/1 errors if secret key is invalid base64" do
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.Box.decrypt(
         %{
           secret_key: "invalid",
@@ -171,7 +171,7 @@ defmodule Salty.BoxTest do
   end
 
   test "decrypt/1 errors if secret key is invalid" do
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.Box.decrypt(
         %{
           secret_key: "dGVzdA",
@@ -183,7 +183,7 @@ defmodule Salty.BoxTest do
   end
 
   test "decrypt/1 errors if public key is invalid base64" do
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.Box.decrypt(
         %{
           secret_key: @bob_secret_key,
@@ -195,12 +195,24 @@ defmodule Salty.BoxTest do
   end
 
   test "decrypt/1 errors if public key is invalid" do
-    assert_raise ArgumentError, fn ->
+    assert_raise Salty.KeyError, fn ->
       Salty.Box.decrypt(
         %{
           secret_key: @bob_secret_key,
           public_key: "dGVzdA",
           payload: "aDBai91GSGrCB5bKdyjD2CVZ_D1Kd1g3UohStf6O7wPFYO1FnGuUS9-v"
+        }
+      )
+    end
+  end
+
+  test "decrypt/1 errors if payload is invalid" do
+    assert_raise Salty.PayloadError, fn ->
+      Salty.Box.decrypt(
+        %{
+          secret_key: @bob_secret_key,
+          public_key: @alice_public_key,
+          payload: "a"
         }
       )
     end

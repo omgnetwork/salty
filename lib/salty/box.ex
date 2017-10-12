@@ -29,7 +29,7 @@ defmodule Salty.Box do
   """
   @spec generate_public_key(binary) :: binary
   def generate_public_key(secret_key) do
-    {:ok, secret_key} = Base.url_decode64(secret_key, padding: false)
+    secret_key = Salty.Utils.decode_key(secret_key, :enacl.box_secret_key_bytes)
 
     filler = :binary.copy(<<0::8>>, 31)
     base_point = <<9::8, filler::binary>>
@@ -55,8 +55,8 @@ defmodule Salty.Box do
   """
   @spec encrypt(Map) :: binary
   def encrypt(%{secret_key: secret_key, public_key: public_key, payload: payload}) do
-    {:ok, secret_key} = Base.url_decode64(secret_key, padding: false)
-    {:ok, public_key} = Base.url_decode64(public_key, padding: false)
+    secret_key = Salty.Utils.decode_key(secret_key, :enacl.box_secret_key_bytes)
+    public_key = Salty.Utils.decode_key(public_key, :enacl.box_public_key_bytes)
 
     nonce = :enacl.randombytes(:enacl.box_nonce_size)
     ciphertext = :enacl.box(payload, nonce, public_key, secret_key)
@@ -81,15 +81,17 @@ defmodule Salty.Box do
   """
   @spec decrypt(Map) :: binary
   def decrypt(%{secret_key: secret_key, public_key: public_key, payload: payload}) do
-    {:ok, secret_key} = Base.url_decode64(secret_key, padding: false)
-    {:ok, public_key} = Base.url_decode64(public_key, padding: false)
-    {:ok, combined} = Base.url_decode64(payload, padding: false)
+    secret_key = Salty.Utils.decode_key(secret_key, :enacl.box_secret_key_bytes)
+    public_key = Salty.Utils.decode_key(public_key, :enacl.box_public_key_bytes)
 
     nonce_size = :enacl.box_nonce_size
-    <<nonce::binary-size(nonce_size), ciphertext::binary>> = combined
-    case :enacl.box_open(ciphertext, nonce, public_key, secret_key) do
-      {:ok, plaintext} -> plaintext
-      {:error, _} -> raise Salty.ValidationError
+    case Base.url_decode64(payload, padding: false) do
+      {:ok, <<nonce::binary-size(nonce_size), ciphertext::binary>>} ->
+        case :enacl.box_open(ciphertext, nonce, public_key, secret_key) do
+          {:ok, plaintext} -> plaintext
+          {:error, _} -> raise Salty.ValidationError
+        end
+      _ -> raise Salty.PayloadError
     end
   end
 end
