@@ -20,6 +20,7 @@ defmodule Salty.Mixfile do
   defp deps do
     [
       {:enacl, git: "https://github.com/jlouis/enacl.git", tag: "0.16.0"},
+      {:cloak, "~> 0.3.3", only: [:dev, :test]},
     ]
   end
 end

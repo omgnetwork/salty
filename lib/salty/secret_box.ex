@@ -1,6 +1,6 @@
 defmodule Salty.SecretBox do
   @moduledoc """
-  Symmetric encryption using libsodium's secret box.
+  Symmetric-key encryption using libsodium's secret box.
   """
 
   @doc """
@@ -32,7 +32,7 @@ defmodule Salty.SecretBox do
   """
   @spec encrypt(Map) :: binary
   def encrypt(%{key: key, payload: payload}) do
-    {:ok, key} = Base.url_decode64(key, padding: false)
+    key = Salty.Utils.decode_key(key, :enacl.secretbox_key_size)
     nonce = :enacl.randombytes(:enacl.secretbox_nonce_size)
     ciphertext = :enacl.secretbox(payload, nonce, key)
 
@@ -50,13 +50,16 @@ defmodule Salty.SecretBox do
   """
   @spec decrypt(Map) :: binary
   def decrypt(%{key: key, payload: payload}) do
-    {:ok, key} = Base.url_decode64(key, padding: false)
-    {:ok, combined} = Base.url_decode64(payload, padding: false)
+    key = Salty.Utils.decode_key(key, :enacl.secretbox_key_size)
 
     nonce_size = :enacl.secretbox_nonce_size
-    <<nonce::binary-size(nonce_size), ciphertext::binary>> = combined
-    {:ok, plaintext} = :enacl.secretbox_open(ciphertext, nonce, key)
-
-    plaintext
+    case Base.url_decode64(payload, padding: false) do
+      {:ok, <<nonce::binary-size(nonce_size), ciphertext::binary>>} ->
+        case :enacl.secretbox_open(ciphertext, nonce, key) do
+          {:ok, plaintext} -> plaintext
+          {:error, _} -> raise Salty.ValidationError
+        end
+      _ -> raise Salty.PayloadError, message: "invalid payload: #{payload}"
+    end
   end
 end
