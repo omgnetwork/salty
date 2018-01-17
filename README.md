@@ -14,7 +14,7 @@ Add `salty` to your hex dependencies:
 
 ```
 defp deps do
-  [{:salty, git: "ssh://git@phabricator.omisego.io/source/salty.git"}]
+  [{:salty, git: "ssh://git@github/omisego/salty.git"}]
 end
 ```
 
