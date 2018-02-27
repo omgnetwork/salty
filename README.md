@@ -1,30 +1,31 @@
-# Salty
+Salty
+=====
 
-Elixir wrapper for [enacl](https://github.com/jlouis/enacl) and [libsodium](https://download.libsodium.org/doc/).
+An Elixir wrapper for [enacl](https://github.com/jlouis/enacl) and [libsodium](https://download.libsodium.org/doc/).
 
-## Requirements
+# Requirements
 
 Installation of Salty require the following library to be installed:
 
 * [libsodium](https://download.libsodium.org/doc/) **must** be installed on your machine.
 
-## Installation
+# Installation
 
 Add `salty` to your hex dependencies:
 
 ```
 defp deps do
-  [{:salty, git: "ssh://git@github/omisego/salty.git"}]
+  [{:salty, "~> 0.1.0"}]
 end
 ```
 
 Then run `mix deps.get` and you're done.
 
-## Usage
+# Usage
 
 Salty supports both symmetric-key encryption (SecretBox) and asymmetric-key encryption (Box) with optional integration with [Cloak](https://github.com/danielberkompas/cloak/) for use in Ecto applications.
 
-### Symmetric-key encryption
+## Symmetric-key encryption
 
 Symmetric-key encryption is an encryption that uses the **same key** to encrypt and decrypt the data. In this scheme, in order for Alice and Bob to send each other a message, they both will have to share the same key. No one else can decrypt the message without knowing the key.
 
@@ -37,7 +38,7 @@ iex> Salty.SecretBox.decrypt(%{key: key, payload: payload})
 "hello, world"
 ```
 
-### Using with Cloak
+## Using with Cloak
 
 Salty symmetric-key encryption can be used as a cipher for [Cloak](https://github.com/danielberkompas/cloak/) and supports key migration via multiple key tags the same way `Cloak.AES.CTR` does:
 
@@ -51,7 +52,7 @@ config :cloak, Salty.SecretBox.Cloak,
   ]
 ```
 
-### Asymmetric-key encryption
+## Asymmetric-key encryption
 
 Asymmetric-key encryption is an encryption that uses **two different keys** for each party. For Alice to send Bob a message in this scheme, the message need to be encrypted with Alice's private key and Bob's public key, and for Bob to decrypt the message, Bob will need to decrypt the message with his own private key and Alice's public key. An attacker cannot decrypt the message without first obtaining the private key of either Alice or Bob.
 
@@ -78,7 +79,7 @@ iex> Salty.Box.decrypt(%{
 "hello, world"
 ```
 
-### Using with Cloak
+## Using with Cloak
 
 Salty asymmetric-key encryption can be used as a cipher for [Cloak](https://github.com/danielberkompas/cloak/) and supports key migration via multiple key tags the same way `Cloak.AES.CTR` does:
 
@@ -91,3 +92,11 @@ config :cloak, Salty.Box.Cloak,
     %{tag: <<2>>, public_key: "...", secret_key: "...", default: true},
   ]
 ```
+
+# Contributing
+
+See [how you can help](.github/CONTRIBUTING.md).
+
+# License
+
+The OmiseGO eWallet is released under the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
