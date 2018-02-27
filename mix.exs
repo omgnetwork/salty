@@ -4,7 +4,7 @@ defmodule Salty.Mixfile do
   def project do
     [
       app: :salty,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       description: description(),
@@ -35,6 +35,7 @@ defmodule Salty.Mixfile do
     [
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/omisego/salty"},
+      maintainers: ["Thibault Denizet", "Unnawut Leepaisalsuwanna"]
     ]
   end
 end
