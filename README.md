@@ -99,4 +99,4 @@ See [how you can help](.github/CONTRIBUTING.md).
 
 # License
 
-The OmiseGO eWallet is released under the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
+Salty is released under the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
