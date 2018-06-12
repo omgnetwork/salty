@@ -1,5 +1,4 @@
-Salty
-=====
+# Salty
 
 An Elixir wrapper for [enacl](https://github.com/jlouis/enacl) and [libsodium](https://download.libsodium.org/doc/).
 
@@ -7,7 +6,7 @@ An Elixir wrapper for [enacl](https://github.com/jlouis/enacl) and [libsodium](h
 
 Installation of Salty require the following library to be installed:
 
-* [libsodium](https://download.libsodium.org/doc/) **must** be installed on your machine.
+-   [libsodium](https://download.libsodium.org/doc/) **must** be installed on your machine.
 
 # Installation
 
@@ -23,7 +22,7 @@ Then run `mix deps.get` and you're done.
 
 # Usage
 
-Salty supports both symmetric-key encryption (SecretBox) and asymmetric-key encryption (Box) with optional integration with [Cloak](https://github.com/danielberkompas/cloak/) for use in Ecto applications.
+Salty supports both symmetric-key encryption (SecretBox) and asymmetric-key encryption (Box).
 
 ## Symmetric-key encryption
 
@@ -36,20 +35,6 @@ iex> payload = Salty.SecretBox.encrypt(%{key: key, payload: "hello, world"})
 "HDNg7zwwGejt9qWe8UbvQZFIMCGbO2L841Z4Pwh9Vhi-vKCCdILYlDy5RkHB"
 iex> Salty.SecretBox.decrypt(%{key: key, payload: payload})
 "hello, world"
-```
-
-## Using with Cloak
-
-Salty symmetric-key encryption can be used as a cipher for [Cloak](https://github.com/danielberkompas/cloak/) and supports key migration via multiple key tags the same way `Cloak.AES.CTR` does:
-
-```
-config :cloak, Salty.SecretBox.Cloak,
-  tag: "SBX",
-  default: true,
-  keys: [
-    %{tag: <<1>>, key: "..."},
-    %{tag: <<2>>, key: "...", default: true},
-  ]
 ```
 
 ## Asymmetric-key encryption
@@ -77,20 +62,6 @@ iex> Salty.Box.decrypt(%{
 ...>   payload: payload
 ...> })
 "hello, world"
-```
-
-## Using with Cloak
-
-Salty asymmetric-key encryption can be used as a cipher for [Cloak](https://github.com/danielberkompas/cloak/) and supports key migration via multiple key tags the same way `Cloak.AES.CTR` does:
-
-```
-config :cloak, Salty.Box.Cloak,
-  tag: "BOX",
-  default: true,
-  keys: [
-    %{tag: <<1>>, public_key: "...", secret_key: "..."},
-    %{tag: <<2>>, public_key: "...", secret_key: "...", default: true},
-  ]
 ```
 
 # Contributing

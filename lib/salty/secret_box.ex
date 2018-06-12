@@ -14,7 +14,7 @@ defmodule Salty.SecretBox do
   """
   @spec generate_key :: binary
   def generate_key do
-    key = :enacl.randombytes(:enacl.secretbox_key_size)
+    key = :enacl.randombytes(:enacl.secretbox_key_size())
     Base.url_encode64(key, padding: false)
   end
 
@@ -32,8 +32,8 @@ defmodule Salty.SecretBox do
   """
   @spec encrypt(Map) :: binary
   def encrypt(%{key: key, payload: payload}) do
-    key = Salty.Utils.decode_key(key, :enacl.secretbox_key_size)
-    nonce = :enacl.randombytes(:enacl.secretbox_nonce_size)
+    key = Salty.Utils.decode_key(key, :enacl.secretbox_key_size())
+    nonce = :enacl.randombytes(:enacl.secretbox_nonce_size())
     ciphertext = :enacl.secretbox(payload, nonce, key)
 
     Base.url_encode64(nonce <> ciphertext, padding: false)
@@ -50,16 +50,19 @@ defmodule Salty.SecretBox do
   """
   @spec decrypt(Map) :: binary
   def decrypt(%{key: key, payload: payload}) do
-    key = Salty.Utils.decode_key(key, :enacl.secretbox_key_size)
+    key = Salty.Utils.decode_key(key, :enacl.secretbox_key_size())
 
-    nonce_size = :enacl.secretbox_nonce_size
+    nonce_size = :enacl.secretbox_nonce_size()
+
     case Base.url_decode64(payload, padding: false) do
       {:ok, <<nonce::binary-size(nonce_size), ciphertext::binary>>} ->
         case :enacl.secretbox_open(ciphertext, nonce, key) do
           {:ok, plaintext} -> plaintext
           {:error, _} -> raise Salty.ValidationError
         end
-      _ -> raise Salty.PayloadError, message: "invalid payload: #{payload}"
+
+      _ ->
+        raise Salty.PayloadError, message: "invalid payload: #{payload}"
     end
   end
 end
